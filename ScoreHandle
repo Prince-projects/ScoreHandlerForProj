@@ -1,0 +1,48 @@
+import javafx.scene.paint.Stop;
+import java.util.ArrayList;
+import java.util.Scanner;
+import java.util.concurrent.ThreadLocalRandom;
+
+public class TasksHandler {
+    ArrayList<String> taskList = new ArrayList<String>();
+    static int startingScore = (int) (Math.random() * 1300 + 1);
+    int currentScore = startingScore; // Creating a starting score and def a tasklist to add/decrease score.
+
+    public void taskAllocation() throws InterruptedException {
+        Scanner taskScan = new Scanner(System.in);
+        if (startingScore > 1000 && startingScore < 1300) {
+            System.out.println("Very nice starting score.");
+        }
+        if (startingScore < 1000) {
+            System.out.println("Not a good start."); // Random starting scores.
+        }
+        
+        boolean userQuit = false;
+        String[] motivText = {"Good job", "You can do better than that, i'm sure.", "I've seen better attempts, do better."}; // text to motivate the user. Will run in sep thread to give constant encouragement.
+        while (!userQuit) {
+            int randomNum = ThreadLocalRandom.current().nextInt(0, motivText.length);
+            int randomNumTask = ThreadLocalRandom.current().nextInt(0, motivText.length);
+            System.out.println("It's time to do " + taskList.get(randomNumTask)); // Random int from tasklength range. Picks a random task, essentially.
+            Thread.sleep(2000);
+            System.out.println(motivText[randomNum]);
+            System.out.println("let me know when you're done, slowpoke.");
+            String userTaskCompletion = taskScan.nextLine();
+            if (userTaskCompletion.equalsIgnoreCase("yes") || userTaskCompletion.equalsIgnoreCase("y")) {
+                System.out.println("Finally");
+                currentScore = currentScore + (int) (Math.random() * 200);
+                System.out.println("Your current score is " + currentScore); // calcs for current score.
+            }
+            if (userTaskCompletion.equalsIgnoreCase("no") || userTaskCompletion.equalsIgnoreCase("n")) {
+                System.out.println("Done so soon?");
+                if (currentScore > 2000) {
+                    System.out.println("Well done!");
+                    System.exit(1);
+                } // Good end.
+                if (currentScore <= 2000) {
+                    System.out.println("Not good enough, another go.");
+                    System.exit(1);
+                } //  Bad end.
+            }
+        }
+    }
+}
